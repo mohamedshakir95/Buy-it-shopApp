@@ -1,5 +1,5 @@
 import 'package:buy_it_shop/provider/admin_mode.dart';
-import 'package:buy_it_shop/provider/modalhud.dart';
+import 'package:buy_it_shop/model/modalhud.dart';
 import 'package:buy_it_shop/screens/sighup_screen.dart';
 import 'package:buy_it_shop/services/auth.dart';
 import 'package:buy_it_shop/widgets/custom_textfield.dart';
@@ -170,6 +170,7 @@ class LoginScreen extends StatelessWidget {
           Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.message)));
         }
       }
+      
     }
     modelhud.changeIsLoading(false);
   }

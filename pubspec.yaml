@@ -33,6 +33,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
+  flushbar: ^1.5.0
 
 dev_dependencies:
   flutter_test:
@@ -62,8 +63,25 @@ flutter:
      - images/jackets/jacket8.jpg
      - images/jackets/jacket9.jpg
      - images/jackets/jacket10.jpg
+     - images/shirts/shirt1.jpg
+     - images/shirts/shirt2.jpg
+     - images/shirts/shirt3.jpg
+     - images/shirts/shirt4.jpg
+     - images/shirts/shirt5.jpg
+     - images/shoes/shoe1.jpg
+     - images/shoes/shoe2.jpg
+     - images/shoes/shoe3.jpg
+     - images/shoes/shoe4.jpg
+     - images/trousers/trouser1.jpg
+     - images/trousers/trouser2.jpg
+     - images/trousers/trouser3.jpg
+     - images/trousers/trouser4.jpg
+     
+     
+     
+     
 
-  
+    
   fonts:
     - family: Pacifico
       fonts:

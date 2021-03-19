@@ -1,7 +1,8 @@
-import 'package:buy_it_shop/provider/modalhud.dart';
+import 'package:buy_it_shop/model/modalhud.dart';
 import 'package:buy_it_shop/screens/add_product.dart';
 import 'package:buy_it_shop/screens/admin_screen.dart';
 import 'package:buy_it_shop/screens/edit_product.dart';
+import 'package:buy_it_shop/screens/manage_product.dart';
 import 'package:buy_it_shop/screens/home_page.dart';
 import 'package:buy_it_shop/screens/login_screen.dart';
 import 'package:buy_it_shop/screens/sighup_screen.dart';
@@ -42,7 +43,8 @@ class MyApp extends StatelessWidget {
             HomePage.id: (context) => HomePage(),
             AdminScreen.id: (context) => AdminScreen(),
             AddProduct.id: (context) => AddProduct(),
-            EditProduct.id: (context) => EditProduct()
+            ManageProduct.id: (context) => ManageProduct(),
+            EditProduct.id: (context) => EditProduct(),
           },
         ),
     );

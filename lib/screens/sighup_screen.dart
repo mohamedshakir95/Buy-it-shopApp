@@ -1,4 +1,4 @@
-import 'package:buy_it_shop/provider/modalhud.dart';
+import 'package:buy_it_shop/model/modalhud.dart';
 import 'package:buy_it_shop/screens/home_page.dart';
 import 'package:buy_it_shop/widgets/custom_textfield.dart';
 import 'package:buy_it_shop/widgets/logo_widget.dart';
@@ -73,7 +73,7 @@ class SignupScreen extends StatelessWidget {
                           try{
                           // ignore: unused_local_variable
                           final authResult = await _auth.signUp(
-                            _email, _password);
+                            _email.trim(), _password.trim());
                           modelHud.changeIsLoading(false);
                           Navigator.pushNamed(context, HomePage.id);
                           } catch(e)

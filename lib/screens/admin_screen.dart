@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'add_product.dart';
 import 'edit_product.dart';
+import 'manage_product.dart';
 
 class AdminScreen extends StatelessWidget {
   static String id = 'AdminScreen';
@@ -28,10 +29,10 @@ class AdminScreen extends StatelessWidget {
           RaisedButton(
             onPressed: ()
             {
-              Navigator.of(context).pushNamed(EditProduct.id);
+              Navigator.of(context).pushNamed(ManageProduct.id);
 
             },
-            child: Text('Edit Product'),
+            child: Text('Manage Product'),
           ),
           RaisedButton(
             onPressed: ()
