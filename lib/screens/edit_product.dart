@@ -1,5 +1,5 @@
 import 'package:buy_it_shop/constant.dart';
-import 'file:///C:/Users/mohamed/Desktop/AndroidStudioProjects/buy_it_shop/product.dart';
+import '../model/product.dart';
 import 'package:buy_it_shop/services/store.dart';
 import 'package:buy_it_shop/widgets/custom_textfield.dart';
 import 'package:buy_it_shop/widgets/snack_bar.dart';

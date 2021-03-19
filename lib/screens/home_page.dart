@@ -1,12 +1,13 @@
 import 'package:buy_it_shop/constant.dart';
 import 'package:buy_it_shop/screens/add_product.dart';
-import 'file:///C:/Users/mohamed/Desktop/AndroidStudioProjects/buy_it_shop/product.dart';
+import '../model/product.dart';
 import 'package:buy_it_shop/services/auth.dart';
 import 'package:buy_it_shop/services/store.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   static String id = 'HomePage';
@@ -16,7 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _auth = Auth(); 
+  final _auth = Auth();
   //FirebaseUser _loggedUser();
   int _tabBarIndex = 0;
   final _store = Store();
@@ -62,10 +63,10 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Colors.white,
               elevation: 0,
               bottom: TabBar(
-    
-                isScrollable: false,
-                
+                  labelColor: kMainColor,
+                  isScrollable: true,
                   indicatorColor: kMainColor,
+                  indicatorSize: TabBarIndicatorSize.label,
                   onTap: (value) {
                     setState(() {
                       _tabBarIndex = value;
@@ -102,18 +103,17 @@ class _HomePageState extends State<HomePage> {
                           fontSize: _tabBarIndex == 3 ? 16 : null),
                     ),
                   ]),
-                
             ),
             body: TabBarView(
-             
+              physics: NeverScrollableScrollPhysics(),
               children: <Widget>[
                 jacketView(),
-                trousers(),
-                tShirts(),
-                shoes(),
-               //  productView(kTrousers),
-                // productView(kTshirts),
-                // productView(kShoes),
+                // trousers(),
+                // tShirts(),
+                // shoes(),
+                 productView(kTrousers),
+                productView(kTshirts),
+                productView(kShoes),
                 //productView(kTshirts),
                 //productView(kShoes),
               ],
@@ -131,28 +131,22 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   Text(
                     'Discover'.toUpperCase(),
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: kMainColor),
                   ),
-                  Icon(Icons.shopping_cart)
+                  Icon(Icons.shopping_cart, color: kMainColor)
                 ],
               ),
             ),
           ),
         ),
-       ],
+      ],
     );
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getCurrentUser();
-  // }
-
-  // getCurrentUser() async {
-  //   //_loggedUser = await _auth.getUser();
-  // }
-
+ 
   Widget jacketView() {
     return StreamBuilder<List<Product>>(
         stream: Store().loadProducts(),
@@ -228,283 +222,79 @@ class _HomePageState extends State<HomePage> {
 
   List<Product> getProductsByCategory(String kJackets) {
     List<Product> products = [];
+    try{
     for (var product in _products) {
       if (product.pCategory == kJackets) {
         products.add(product);
       }
     }
+    } on Error catch(ex){
+      print(ex);
+    }
     return products;
   }
 
- Widget trousers() {
-    return StreamBuilder<List<Product>>(
-        stream: Store().loadProducts(),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              var products = snapshot.data;
-              _products = [...products];
-              products.clear();
-              products = getProductsByCategory(kTrousers);
-              return Container(
-                child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, childAspectRatio: .8),
-                    itemCount: products.length,
-                    itemBuilder: (context, index) => Padding(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 10, horizontal: 7),
-                          child: GestureDetector(
-                            child: Stack(
+ Widget productView( String pCategory) {
+    List<Product> products = [];
+    products = getProductsByCategory(pCategory);
+    return GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, childAspectRatio: .8),
+        itemCount: products.length,
+        itemBuilder: (context, index) => Padding(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 7),
+              child: GestureDetector(
+                child: Stack(
+                  children: <Widget>[
+                    Positioned.fill(
+                      child: Image(
+                        fit: BoxFit.fill,
+                        image: AssetImage(products[index].pLocation),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      child: Opacity(
+                        opacity: .6,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 60,
+                          color: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Positioned.fill(
-                                  child: Image(
-                                    fit: BoxFit.fill,
-                                    image:
-                                        AssetImage(products[index].pLocation),
-                                  ),
+                                Text(
+                                  products[index].pName,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Positioned(
-                                  bottom: 0,
-                                  child: Opacity(
-                                    opacity: .6,
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 60,
-                                      color: Colors.white,
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 5, horizontal: 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              products[index].pName,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                '\$ ${products[index].pPrice}'),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                Text('\$ ${products[index].pPrice}'),
                               ],
                             ),
                           ),
-                        )),
-              );
-            }
-          }
-          return Container(
-            child: Text('error'),
-          );
-        });
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ));
   }
+ 
 
- Widget tShirts() {
-    return StreamBuilder<List<Product>>(
-        stream: Store().loadProducts(),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              var products = snapshot.data;
-              _products = [...products];
-              products.clear();
-              products = getProductsByCategory(kTshirts);
-              return Container(
-                child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, childAspectRatio: .8),
-                    itemCount: products.length,
-                    itemBuilder: (context, index) => Padding(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 10, horizontal: 7),
-                          child: GestureDetector(
-                            child: Stack(
-                              children: <Widget>[
-                                Positioned.fill(
-                                  child: Image(
-                                    fit: BoxFit.fill,
-                                    image:
-                                        AssetImage(products[index].pLocation),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  child: Opacity(
-                                    opacity: .6,
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 60,
-                                      color: Colors.white,
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 5, horizontal: 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              products[index].pName,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                '\$ ${products[index].pPrice}'),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-              );
-            }
-          }
-          return Container(
-            child: Text('error'),
-          );
-        });
-  }
-  
- Widget shoes() {
-    return StreamBuilder<List<Product>>(
-        stream: Store().loadProducts(),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              var products = snapshot.data;
-              _products = [...products];
-              products.clear();
-              products = getProductsByCategory(kShoes);
-              return Container(
-                child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, childAspectRatio: .8),
-                    itemCount: products.length,
-                    itemBuilder: (context, index) => Padding(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 10, horizontal: 7),
-                          child: GestureDetector(
-                            child: Stack(
-                              children: <Widget>[
-                                Positioned.fill(
-                                  child: Image(
-                                    fit: BoxFit.fill,
-                                    image:
-                                        AssetImage(products[index].pLocation),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  child: Opacity(
-                                    opacity: .6,
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 60,
-                                      color: Colors.white,
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 5, horizontal: 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              products[index].pName,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                '\$ ${products[index].pPrice}'),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-              );
-            }
-          }
-          return Container(
-            child: Text('error'),
-          );
-        });
-  }
-  
-  
-  // Widget productView( String pCategory) {
-  //   List<Product> products = [];
-  //   products = getProductsByCategory(pCategory);
-  //   return GridView.builder(
-  //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //           crossAxisCount: 2, childAspectRatio: .8),
-  //       itemCount: products.length,
-  //       itemBuilder: (context, index) => Padding(
-  //             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 7),
-  //             child: GestureDetector(
-  //               child: Stack(
-  //                 children: <Widget>[
-  //                   Positioned.fill(
-  //                     child: Image(
-  //                       fit: BoxFit.fill,
-  //                       image: AssetImage(products[index].pLocation),
-  //                     ),
-  //                   ),
-  //                   Positioned(
-  //                     bottom: 0,
-  //                     child: Opacity(
-  //                       opacity: .6,
-  //                       child: Container(
-  //                         width: MediaQuery.of(context).size.width,
-  //                         height: 60,
-  //                         color: Colors.white,
-  //                         child: Padding(
-  //                           padding: EdgeInsets.symmetric(
-  //                               vertical: 5, horizontal: 10),
-  //                           child: Column(
-  //                             crossAxisAlignment: CrossAxisAlignment.start,
-  //                             children: <Widget>[
-  //                               Text(
-  //                                 products[index].pName,
-  //                                 style: TextStyle(fontWeight: FontWeight.bold),
-  //                               ),
-  //                               Text('\$ ${products[index].pPrice}'),
-  //                             ],
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ));
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getCurrentUser();
+  // }
+
+  // getCurrentUser() async {
+  //   //_loggedUser = await _auth.getUser();
   // }
 
 
 
+  
 }

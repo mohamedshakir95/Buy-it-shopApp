@@ -1,6 +1,6 @@
 
 
-import 'file:///C:/Users/mohamed/Desktop/AndroidStudioProjects/buy_it_shop/product.dart';
+import '../model/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:buy_it_shop/constant.dart';
 
